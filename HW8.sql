@@ -1,0 +1,8 @@
+/* Query 1 */
+SELECT * FROM RESERVATION
+WHERE YEAR(RDate) = 2020
+AND ActID LIKE 'HB%'
+AND GuideID NOT IN ('RH01', 'MR01');
+
+
+/* Query 2 */
