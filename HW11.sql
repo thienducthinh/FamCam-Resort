@@ -1,0 +1,10 @@
+CREATE TABLE INVOICE (
+    InvoiceNo SMALLINT IDENTITY(10000,1) PRIMARY KEY,
+    InvoiceDate DATE DEFAULT GETDATE(),
+    BookID INT NOT NULL,
+    GuestID VARCHAR(4) NOT NULL,
+    StartDate DATE NOT NULL,
+    CondoFee DECIMAL(7, 2) DEFAULT 0,  
+    ActivityFee DECIMAL(7, 2) DEFAULT 0,
+    InvoiceTotal DECIMAL(7, 2) DEFAULT 0,
+)
