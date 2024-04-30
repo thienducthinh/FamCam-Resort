@@ -1,3 +1,13 @@
+-- Drops the database 'VinaBank' if it exists
+DROP DATABASE IF EXISTS VinaBank;
+
+-- Creates a new database named 'VinaBank' with the default character set utf8mb4
+CREATE DATABASE VinaBank DEFAULT CHARACTER SET = 'utf8mb4';
+
+-- Switches to using the 'VinaBank' database
+USE `VinaBank`;
+
+-- Drops the tables if they exist
 DROP TABLE IF EXISTS RESERVATION;
 DROP TABLE IF EXISTS CLEANING;
 DROP TABLE IF EXISTS BOOKING;
@@ -10,115 +20,127 @@ DROP TABLE IF EXISTS GUEST;
 DROP TABLE IF EXISTS CONDO;
 DROP TABLE IF EXISTS ACTIVITY;
 
-/* Create Employee Table */
-CREATE TABLE EMPLOYEE (
-EmpID CHAR(4),
-LName VARCHAR(20) NOT NULL,
-MName VARCHAR(20) default ' ',
-FName VARCHAR(15) NOT NULL,
-Gender CHAR(1) NOT NULL,
-Phone CHAR(12) NOT NULL,
-Hiredate date NOT NULL,
-MgrNum CHAR(4) default NULL,
-Department VARCHAR(20) NOT NULL,
-Salary DECIMAL(8,2),
-EType CHAR(1) default NULL,
-PRIMARY KEY (EmpID),
-FOREIGN KEY (MgrNum) REFERENCES EMPLOYEE (EmpID));
-
-/* Create Activity Table */
-CREATE TABLE ACTIVITY (
-ActID VARCHAR(3) PRIMARY KEY,
-Description VARCHAR(30) NOT NULL,
-Hours TINYINT NOT NULL,
-PPP DECIMAL(4,2) NOT NULL,
-Distance TINYINT NOT NULL,
-Type VARCHAR(15) NOT NULL);
-
-/* Create Condo Table */
-CREATE TABLE CONDO (
-BldgNum CHAR(1) NOT NULL,
-UnitNum CHAR(3) NOT NULL,
-SqrFt SMALLINT NOT NULL,
-Bdrms TINYINT NOT NULL,
-Baths TINYINT NOT NULL,
-DailyRate DECIMAL(7,2) NOT NULL,
-PRIMARY KEY (BldgNum, UnitNum));
-
-/* Create Housekeeper Table */
-CREATE TABLE HOUSEKEEPER (
-HKID CHAR(4),
-Shift CHAR(7) NOT NULL Check (Shift IN ('Shift 1', 'Shift 2', 'Shift 3')),
-Status CHAR(4) NOT NULL Check (Status IN ('Perm', 'Temp')),
-PRIMARY KEY (HKID),
-FOREIGN KEY (HKID) REFERENCES EMPLOYEE (EmpID));
-
-/* Create Guide Table */
-CREATE TABLE GUIDE (
-GuideID CHAR(4) PRIMARY KEY,
-Level CHAR(7) NOT NULL CHECK (Level IN ('Level 1', 'Level 2', 'Level 3')),
-CertDate Date NOT NULL,
-CertRenewDate Date Default NULL,
-FOREIGN KEY (GuideID) REFERENCES EMPLOYEE (EmpID));
-
-/* Create Guide Level Table */
+-- Creates the 'GUIDE_LEVEL' table
 CREATE TABLE GUIDE_LEVEL (
-Level CHAR(7) NOT NULL CHECK (Level IN ('Level 1', 'Level 2', 'Level 3')),
-BadgeColor VARCHAR(20) NOT NULL CHECK (BadgeColor IN ('White', 'Green', 'Blue')),
-TrainingHours SMALLINT NOT NULL CHECK (TrainingHours IN (80, 120, 160)));
+    Level CHAR(7) NOT NULL CHECK (Level IN ('Level 1', 'Level 2', 'Level 3')),
+    BadgeColor VARCHAR(20) NOT NULL CHECK (BadgeColor IN ('White', 'Green', 'Blue')),
+    TrainingHours SMALLINT NOT NULL CHECK (TrainingHours IN (80, 120, 160)),
+    PRIMARY KEY (Level)
+) ENGINE=InnoDB;
 
-/* Create Guest Table */
+-- Creates the 'EMPLOYEE' table
+CREATE TABLE EMPLOYEE (
+    EmpID CHAR(4),
+    LName VARCHAR(20) NOT NULL,
+    MName VARCHAR(20) DEFAULT ' ',
+    FName VARCHAR(15) NOT NULL,
+    Gender CHAR(1) NOT NULL,
+    Phone CHAR(12) NOT NULL,
+    Hiredate DATE NOT NULL,
+    MgrNum CHAR(4) DEFAULT NULL,
+    Department VARCHAR(20) NOT NULL,
+    Salary DECIMAL(8,2),
+    EType CHAR(1) DEFAULT NULL,
+    PRIMARY KEY (EmpID),
+    FOREIGN KEY (MgrNum) REFERENCES EMPLOYEE (EmpID)
+) ENGINE=InnoDB;
+
+-- Creates the 'GUEST' table
 CREATE TABLE GUEST (
-GuestID VARCHAR(4),
-LName VARCHAR(20) NOT NULL,
-FName VARCHAR(15) NOT NULL,
-Street VARCHAR(50) NOT NULL,
-City VARCHAR(20) NOT NULL,
-State CHAR(2) NOT NULL,
-Phone CHAR(12) NOT NULL,
-SpouseFName VARCHAR(15) NOT NULL,
-PRIMARY KEY (GuestID));
+    GuestID VARCHAR(4),
+    LName VARCHAR(20) NOT NULL,
+    FName VARCHAR(15) NOT NULL,
+    Street VARCHAR(50) NOT NULL,
+    City VARCHAR(20) NOT NULL,
+    State CHAR(2) NOT NULL,
+    Phone CHAR(12) NOT NULL,
+    SpouseFName VARCHAR(15) NOT NULL,
+    PRIMARY KEY (GuestID)
+) ENGINE=InnoDB;
 
-/* Create Family Table */
+-- Creates the 'CONDO' table
+CREATE TABLE CONDO (
+    BldgNum CHAR(1) NOT NULL,
+    UnitNum CHAR(3) NOT NULL,
+    SqrFt SMALLINT NOT NULL,
+    Bdrms TINYINT NOT NULL,
+    Baths TINYINT NOT NULL,
+    DailyRate DECIMAL(7,2) NOT NULL,
+    PRIMARY KEY (BldgNum, UnitNum)
+) ENGINE=InnoDB;
+
+-- Creates the 'HOUSEKEEPER' table
+CREATE TABLE HOUSEKEEPER (
+    HKID CHAR(4),
+    Shift CHAR(7) NOT NULL CHECK (Shift IN ('Shift 1', 'Shift 2', 'Shift 3')),
+    Status CHAR(4) NOT NULL CHECK (Status IN ('Perm', 'Temp')),
+    PRIMARY KEY (HKID),
+    FOREIGN KEY (HKID) REFERENCES EMPLOYEE (EmpID)
+) ENGINE=InnoDB;
+
+-- Creates the 'GUIDE' table
+CREATE TABLE GUIDE (
+    GuideID CHAR(4) PRIMARY KEY,
+    Level CHAR(7) NOT NULL CHECK (Level IN ('Level 1', 'Level 2', 'Level 3')),
+    CertDate DATE NOT NULL,
+    CertRenewDate DATE DEFAULT NULL,
+    FOREIGN KEY (GuideID) REFERENCES EMPLOYEE (EmpID)
+) ENGINE=InnoDB;
+
+-- Creates the 'ACTIVITY' table
+CREATE TABLE ACTIVITY (
+    ActID VARCHAR(3) PRIMARY KEY,
+    Description VARCHAR(30) NOT NULL,
+    Hours TINYINT NOT NULL,
+    PPP DECIMAL(4,2) NOT NULL,
+    Distance TINYINT NOT NULL,
+    Type VARCHAR(15) NOT NULL
+) ENGINE=InnoDB;
+
+-- Creates the 'FAMILY' table
 CREATE TABLE FAMILY (
-GuestID VARCHAR(4) NOT NULL,
-FName VARCHAR(15) NOT NULL,
-Relationship VARCHAR(10) NOT NULL,
-Birthdate date NOT NULL,
-PRIMARY KEY (GuestID, Fname),
-FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID));
+    GuestID VARCHAR(4) NOT NULL,
+    FName VARCHAR(15) NOT NULL,
+    Relationship VARCHAR(10) NOT NULL,
+    Birthdate DATE NOT NULL,
+    PRIMARY KEY (GuestID, FName),
+    FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID)
+) ENGINE=InnoDB;
 
-/* Create Cleanning Table */
+-- Creates the 'CLEANING' table
 CREATE TABLE CLEANING (
-ScheduleID int NOT NULL Identity (1000,1),
-BldgNum CHAR(1) NOT NULL,
-UnitNum CHAR(3) NOT NULL,
-HKID CHAR(4) NOT NULL,
-DateCleaned Date NOT NULL,
-PRIMARY KEY (ScheduleID),
-FOREIGN KEY (HKID) REFERENCES HOUSEKEEPER(HKID),
-FOREIGN KEY (BldgNum, UnitNum) References Condo(BldgNum, UnitNum));
+    ScheduleID INT NOT NULL AUTO_INCREMENT,
+    BldgNum CHAR(1) NOT NULL,
+    UnitNum CHAR(3) NOT NULL,
+    HKID CHAR(4) NOT NULL,
+    DateCleaned DATE NOT NULL,
+    PRIMARY KEY (ScheduleID),
+    FOREIGN KEY (HKID) REFERENCES HOUSEKEEPER(HKID),
+    FOREIGN KEY (BldgNum, UnitNum) REFERENCES CONDO(BldgNum, UnitNum)
+) ENGINE=InnoDB;
 
-/* Create Booking Table */
+-- Creates the 'BOOKING' table
 CREATE TABLE BOOKING (
-BookID Int PRIMARY KEY Identity (100,1),
-BldgNum CHAR(1) NOT NULL,
-UnitNum CHAR(3) NOT NULL,
-GuestID VARCHAR(4) NOT NULL,
-StartDate Date NOT NULL,
-EndDate Date NOT NULL,
-CondoFee DECIMAL(7,2) default 0,
-FOREIGN KEY (BldgNum, UnitNum) REFERENCES CONDO (BldgNum, UnitNum),
-FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID));
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    BldgNum CHAR(1) NOT NULL,
+    UnitNum CHAR(3) NOT NULL,
+    GuestID VARCHAR(4) NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    CondoFee DECIMAL(7,2) DEFAULT 0,
+    FOREIGN KEY (BldgNum, UnitNum) REFERENCES CONDO (BldgNum, UnitNum),
+    FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID)
+) ENGINE=InnoDB;
 
-/* Create Reservation Table */
+-- Creates the 'RESERVATION' table
 CREATE TABLE RESERVATION (
-ResID Int PRIMARY KEY Identity (10,1),
-GuestID VARCHAR(4) NOT NULL,
-ActID VARCHAR(3) NOT NULL,
-GuideID CHAR(4) NOT NULL,
-RDate Date NOT NULL,
-NumberInParty TINYINT NOT NULL,
-FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID),
-FOREIGN KEY (ActID) REFERENCES ACTIVITY (ActID),
-FOREIGN KEY (GuideID) REFERENCES GUIDE (GuideID));
+    ResID INT PRIMARY KEY AUTO_INCREMENT,
+    GuestID VARCHAR(4) NOT NULL,
+    ActID VARCHAR(3) NOT NULL,
+    GuideID CHAR(4) NOT NULL,
+    RDate DATE NOT NULL,
+    NumberInParty TINYINT NOT NULL,
+    FOREIGN KEY (GuestID) REFERENCES GUEST (GuestID),
+    FOREIGN KEY (ActID) REFERENCES ACTIVITY (ActID),
+    FOREIGN KEY (GuideID) REFERENCES GUIDE (GuideID)
+) ENGINE=InnoDB;

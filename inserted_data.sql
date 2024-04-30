@@ -1,3 +1,4 @@
+-- Active: 1712522664993@@127.0.0.1@3306@VinaBank
 /* Insert Employee Records */
 
 INSERT INTO EMPLOYEE VALUES ('NE01', 'Neilson', DEFAULT, 'Evan','M', '480-555-8945', '3-Jun-10', NULL,'GM', 185000, NULL);
